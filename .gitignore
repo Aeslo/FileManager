@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.python-version
+
+# Virtual Environments
+venv/
+.venv/
+env/
+.env
+
+# Project Specific
+data/
+eval-design.html
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+
+# Hidden files and directories
+.*/
