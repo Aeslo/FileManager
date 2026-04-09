@@ -1,0 +1,32 @@
+[
+  {
+    "date": "2026-04-09",
+    "engine": "TfidfEngine",
+    "modality": "text",
+    "dataset": "20newsgroups",
+    "config": {
+      "max_features": 10000
+    },
+    "metrics": {
+      "sorting_ari": 0.3624181571108908,
+      "retrieval_precision_at_5": 0.804,
+      "retrieval_map": 0.4065557923551733,
+      "retrieval_mrr": 0.8512857142857143
+    }
+  },
+  {
+    "date": "2026-04-09",
+    "engine": "TfidfEngine",
+    "modality": "text",
+    "dataset": "20newsgroups",
+    "config": {
+      "max_features": 10000
+    },
+    "metrics": {
+      "sorting_ari": 0.3624181571108908,
+      "retrieval_precision_at_5": 0.804,
+      "retrieval_map": 0.4065557923551733,
+      "retrieval_mrr": 0.8512857142857143
+    }
+  }
+]

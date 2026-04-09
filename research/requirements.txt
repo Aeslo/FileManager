@@ -3,3 +3,7 @@ scikit-learn
 opencv-python
 librosa
 pytest
+jupyter
+matplotlib
+pandas
+seaborn

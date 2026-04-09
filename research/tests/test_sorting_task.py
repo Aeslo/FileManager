@@ -3,12 +3,14 @@ from src.tasks.sorting import SortingTask
 from src.engines.text.tfidf import TfidfEngine
 
 def test_sorting_task():
-    # Simple synthetic data
+    # Synthetic data
     data = [
-        "Dogs are pets", "Cats are pets", 
-        "The satellite is in orbit", "The rocket is in space"
+        "Dogs are loyal domestic pets", 
+        "Cats are common household pets", 
+        "Satellite is in geostationary orbit", 
+        "Rocket is entering deep space"
     ]
-    labels = [0, 0, 1, 1]  # 0 = Pets, 1 = Space
+    labels = [0, 0, 1, 1]  # 0 = Animals/Pets, 1 = Space
     
     engine = TfidfEngine()
     engine.fit(data)
