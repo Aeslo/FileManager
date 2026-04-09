@@ -22,3 +22,10 @@ eval-design.html
 
 # Hidden files and directories
 .*/
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
