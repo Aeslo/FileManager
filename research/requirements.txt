@@ -7,3 +7,5 @@ jupyter
 matplotlib
 pandas
 seaborn
+sentence-transformers
+torch
