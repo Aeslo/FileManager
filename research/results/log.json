@@ -46,5 +46,37 @@
       "retrieval_map": 0.2676488771520456,
       "retrieval_mrr": 0.5130228983978984
     }
+  },
+  {
+    "date": "2026-04-14",
+    "engine": "Word2Vec-Pretrained",
+    "modality": "text",
+    "dataset": "20newsgroups",
+    "config": {
+      "vector_size": 300,
+      "epochs": null
+    },
+    "metrics": {
+      "sorting_ari": 0.2692131285160477,
+      "retrieval_precision_at_5": 0.794,
+      "retrieval_map": 0.4160201138780297,
+      "retrieval_mrr": 0.8917619047619048
+    }
+  },
+  {
+    "date": "2026-04-14",
+    "engine": "FastText-Pretrained",
+    "modality": "text",
+    "dataset": "20newsgroups",
+    "config": {
+      "vector_size": 300,
+      "epochs": null
+    },
+    "metrics": {
+      "sorting_ari": 0.026684793987825094,
+      "retrieval_precision_at_5": 0.6459999999999999,
+      "retrieval_map": 0.3180890606180649,
+      "retrieval_mrr": 0.8318419913419913
+    }
   }
 ]
