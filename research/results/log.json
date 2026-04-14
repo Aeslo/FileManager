@@ -1,11 +1,12 @@
 [
   {
-    "date": "2026-04-09",
-    "engine": "TfidfEngine",
+    "date": "2026-04-14",
+    "engine": "TF-IDF",
     "modality": "text",
     "dataset": "20newsgroups",
     "config": {
-      "max_features": 10000
+      "vector_size": null,
+      "epochs": null
     },
     "metrics": {
       "sorting_ari": 0.3624181571108908,
@@ -15,18 +16,35 @@
     }
   },
   {
-    "date": "2026-04-09",
-    "engine": "TfidfEngine",
+    "date": "2026-04-14",
+    "engine": "Word2Vec",
     "modality": "text",
     "dataset": "20newsgroups",
     "config": {
-      "max_features": 10000
+      "vector_size": 100,
+      "epochs": 2
     },
     "metrics": {
-      "sorting_ari": 0.3624181571108908,
-      "retrieval_precision_at_5": 0.804,
-      "retrieval_map": 0.4065557923551733,
-      "retrieval_mrr": 0.8512857142857143
+      "sorting_ari": 0.03616493227919702,
+      "retrieval_precision_at_5": 0.4220000000000001,
+      "retrieval_map": 0.29631208145892907,
+      "retrieval_mrr": 0.6037743873773285
+    }
+  },
+  {
+    "date": "2026-04-14",
+    "engine": "FastText",
+    "modality": "text",
+    "dataset": "20newsgroups",
+    "config": {
+      "vector_size": 100,
+      "epochs": 2
+    },
+    "metrics": {
+      "sorting_ari": 0.01386239668057048,
+      "retrieval_precision_at_5": 0.31,
+      "retrieval_map": 0.2676488771520456,
+      "retrieval_mrr": 0.5130228983978984
     }
   }
 ]

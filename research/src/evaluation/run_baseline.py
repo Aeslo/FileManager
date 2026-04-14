@@ -1,8 +1,8 @@
 """
 Baseline evaluation script.
 
-Runs TF-IDF against both evaluation tasks on the 20 Newsgroups dataset,
-prints results, and appends a dated entry to results/log.json.
+Runs multiple text engines against evaluation tasks on the 20 Newsgroups dataset,
+prints results, and appends dated entries to results/log.json.
 
 Usage:
     python -m src.evaluation.run_baseline
@@ -15,6 +15,8 @@ from datetime import date
 
 from src.data_utils.loader import load_20newsgroups
 from src.engines.text.tfidf import TfidfEngine
+from src.engines.text.word2vec import Word2VecEngine
+from src.engines.text.fasttext import FastTextEngine
 from src.tasks.sorting import SortingTask
 from src.tasks.retrieval import RetrievalTask
 
@@ -29,6 +31,8 @@ TFIDF_MAX_FEATURES = 10_000
 N_RETRIEVAL_QUERIES = 100
 RETRIEVAL_K = 5
 MIN_DOC_LENGTH = 20
+# Reduced epochs for benchmarking pure Python implementations
+WV_EPOCHS = 2 
 RESULTS_LOG = os.path.join(os.path.dirname(__file__), "../../results/log.json")
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -48,7 +52,7 @@ def append_result(entry: dict) -> None:
     log.append(entry)
     with open(log_path, "w") as f:
         json.dump(log, f, indent=2)
-    print(f"\nResults saved → {log_path}")
+    print(f"Results saved → {log_path}")
 
 
 def main():
@@ -62,49 +66,60 @@ def main():
     test_docs, test_labels = filter_empty(test_docs, test_labels)
     print(f"  After filter — Train: {len(train_docs)} | Test: {len(test_docs)}")
 
-    print(f"\nFitting TfidfEngine (max_features={TFIDF_MAX_FEATURES})...")
-    engine = TfidfEngine(max_features=TFIDF_MAX_FEATURES, min_df=2)
-    engine.fit(train_docs)
+    # Define engines to benchmark
+    engines = {
+        "TF-IDF": TfidfEngine(max_features=TFIDF_MAX_FEATURES, min_df=2),
+        "Word2Vec": Word2VecEngine(vector_size=100, window=5, epochs=WV_EPOCHS, min_count=2),
+        "FastText": FastTextEngine(vector_size=100, window=5, epochs=WV_EPOCHS, min_count=2),
+    }
 
-    print("Running SortingTask...")
-    sorting_metrics = SortingTask(n_clusters=len(CATEGORIES)).run(
-        engine, (train_docs, train_labels)
-    )
+    for name, engine in engines.items():
+        print("\n" + "=" * 50)
+        print(f"RUNNING BENCHMARK: {name}")
+        print("=" * 50)
 
-    label_to_indices: dict = defaultdict(set)
-    for idx, label in enumerate(train_labels):
-        label_to_indices[label].add(idx)
+        print(f"Fitting {name}...")
+        engine.fit(train_docs)
 
-    queries = [
-        (test_docs[i], label_to_indices[test_labels[i]])
-        for i in range(min(N_RETRIEVAL_QUERIES, len(test_docs)))
-    ]
+        print("Running SortingTask...")
+        sorting_metrics = SortingTask(n_clusters=len(CATEGORIES)).run(
+            engine, (train_docs, train_labels)
+        )
 
-    print(f"Running RetrievalTask (k={RETRIEVAL_K})...")
-    retrieval_metrics = RetrievalTask(k=RETRIEVAL_K).run(engine, (train_docs, queries))
+        label_to_indices: dict = defaultdict(set)
+        for idx, label in enumerate(train_labels):
+            label_to_indices[label].add(idx)
 
-    print("\n" + "=" * 50)
-    print("BASELINE RESULTS — TF-IDF on 20 Newsgroups")
-    print("=" * 50)
-    print(f"  SortingTask   → ARI:            {sorting_metrics['ari']:.4f}")
-    print(f"  RetrievalTask → Precision@{RETRIEVAL_K}:   {retrieval_metrics['precision_at_k']:.4f}")
-    print(f"  RetrievalTask → MAP:            {retrieval_metrics['map']:.4f}")
-    print(f"  RetrievalTask → MRR:            {retrieval_metrics['mrr']:.4f}")
-    print("=" * 50)
+        queries = [
+            (test_docs[i], label_to_indices[test_labels[i]])
+            for i in range(min(N_RETRIEVAL_QUERIES, len(test_docs)))
+        ]
 
-    append_result({
-        "date": str(date.today()),
-        "engine": "TfidfEngine",
-        "modality": "text",
-        "dataset": "20newsgroups",
-        "config": {"max_features": TFIDF_MAX_FEATURES},
-        "metrics": {
-            "sorting_ari": sorting_metrics["ari"],
-            f"retrieval_precision_at_{RETRIEVAL_K}": retrieval_metrics["precision_at_k"],
-            "retrieval_map": retrieval_metrics["map"],
-            "retrieval_mrr": retrieval_metrics["mrr"],
-        },
-    })
+        print(f"Running RetrievalTask (k={RETRIEVAL_K})...")
+        retrieval_metrics = RetrievalTask(k=RETRIEVAL_K).run(engine, (train_docs, queries))
+
+        print(f"\nRESULTS for {name}:")
+        print(f"  SortingTask   → ARI:            {sorting_metrics['ari']:.4f}")
+        print(f"  RetrievalTask → Precision@{RETRIEVAL_K}:   {retrieval_metrics['precision_at_k']:.4f}")
+        print(f"  RetrievalTask → MAP:            {retrieval_metrics['map']:.4f}")
+        print(f"  RetrievalTask → MRR:            {retrieval_metrics['mrr']:.4f}")
+
+        append_result({
+            "date": str(date.today()),
+            "engine": name,
+            "modality": "text",
+            "dataset": "20newsgroups",
+            "config": {
+                "vector_size": getattr(engine, "vector_size", None),
+                "epochs": getattr(engine, "epochs", None),
+            },
+            "metrics": {
+                "sorting_ari": sorting_metrics["ari"],
+                f"retrieval_precision_at_{RETRIEVAL_K}": retrieval_metrics["precision_at_k"],
+                "retrieval_map": retrieval_metrics["map"],
+                "retrieval_mrr": retrieval_metrics["mrr"],
+            },
+        })
 
 
 if __name__ == "__main__":
