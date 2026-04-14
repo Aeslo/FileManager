@@ -126,5 +126,21 @@
       "retrieval_map": 0.6036439288516793,
       "retrieval_mrr": 0.9506396698267408
     }
+  },
+  {
+    "date": "2026-04-14",
+    "engine": "ColBERT",
+    "modality": "text",
+    "dataset": "20newsgroups",
+    "config": {
+      "vector_size": 768,
+      "epochs": null
+    },
+    "metrics": {
+      "sorting_ari": 0.3877196166559283,
+      "retrieval_precision_at_5": 0.8240000000000001,
+      "retrieval_map": 0.5088504144021334,
+      "retrieval_mrr": 0.9291025641025641
+    }
   }
 ]

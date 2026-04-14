@@ -19,8 +19,9 @@ from src.engines.text.word2vec import Word2VecEngine
 from src.engines.text.fasttext import FastTextEngine
 from src.engines.text.pretrained_gensim import GensimPretrainedEngine
 from src.engines.text.sbert import SBERTEngine
+from src.engines.text.colbert import ColBERTEngine
 from src.tasks.sorting import SortingTask
-from src.tasks.retrieval import RetrievalTask
+from src.tasks.retrieval import RetrievalTask, ColBERTRetrievalTask
 
 # ── Config ────────────────────────────────────────────────────────────────────
 CATEGORIES = [
@@ -75,9 +76,10 @@ def main():
         #"FastText-Scratch": FastTextEngine(vector_size=100, window=5, epochs=WV_EPOCHS, min_count=2),
         #"Word2Vec-Pretrained": GensimPretrainedEngine("word2vec-google-news-300"),
         #"FastText-Pretrained": GensimPretrainedEngine("fasttext-wiki-news-subwords-300"),
-        "SBERT-Small": SBERTEngine("all-MiniLM-L6-v2"),
-        "SBERT-Large": SBERTEngine("all-mpnet-base-v2"),
-        "SBERT-XLarge": SBERTEngine("all-roberta-large-v1"),
+        #"SBERT-Small": SBERTEngine("all-MiniLM-L6-v2"),
+        #"SBERT-Large": SBERTEngine("all-mpnet-base-v2"),
+        #"SBERT-XLarge": SBERTEngine("all-roberta-large-v1"),
+        "ColBERT": ColBERTEngine("colbert-ir/colbertv2.0"),
     }
 
     for name, engine in engines.items():
@@ -103,7 +105,8 @@ def main():
         ]
 
         print(f"Running RetrievalTask (k={RETRIEVAL_K})...")
-        retrieval_metrics = RetrievalTask(k=RETRIEVAL_K).run(engine, (train_docs, queries))
+        retrieval_task = ColBERTRetrievalTask(k=RETRIEVAL_K) if isinstance(engine, ColBERTEngine) else RetrievalTask(k=RETRIEVAL_K)
+        retrieval_metrics = retrieval_task.run(engine, (train_docs, queries))
 
         print(f"\nRESULTS for {name}:")
         print(f"  SortingTask   → ARI:            {sorting_metrics['ari']:.4f}")

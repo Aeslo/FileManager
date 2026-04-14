@@ -1,5 +1,6 @@
 import numpy as np
 from src.tasks.base import BaseTask
+from src.engines.text.colbert import ColBERTEngine
 
 
 def _cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
@@ -38,6 +39,48 @@ def _reciprocal_rank(ranked: list[int], relevant: set[int]) -> float:
         if idx in relevant:
             return 1.0 / rank
     return 0.0
+
+
+def _maxsim_score(query_tokens: np.ndarray, doc_tokens: np.ndarray) -> float:
+    """ColBERT MaxSim: for each query token, find its best matching doc token.
+
+    score(q, d) = Σ_i  max_j ( q_i · d_j )
+
+    Both matrices must already be L2-normalised (as ColBERTEngine guarantees).
+    """
+    # (q_len, d_len) similarity matrix
+    sim = query_tokens @ doc_tokens.T
+    return float(sim.max(axis=1).sum())
+
+
+class ColBERTRetrievalTask(BaseTask):
+    """Retrieval task that uses ColBERT MaxSim scoring instead of cosine similarity.
+
+    Expects a ColBERTEngine so it can call encode_tokens_batch().
+    """
+
+    def __init__(self, k: int = 5):
+        self.k = k
+
+    def run(self, engine: ColBERTEngine, dataset: tuple) -> dict[str, float]:
+        corpus, queries = dataset
+        print("  Encoding corpus token matrices (ColBERT)...")
+        corpus_token_matrices = engine.encode_tokens_batch(corpus)
+
+        p_scores, ap_scores, rr_scores = [], [], []
+        for q_text, relevant in queries:
+            q_tokens = engine._encode_tokens(q_text)
+            scores = [_maxsim_score(q_tokens, d_tokens) for d_tokens in corpus_token_matrices]
+            ranked = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)
+            p_scores.append(_precision_at_k(ranked, relevant, self.k))
+            ap_scores.append(_average_precision(ranked, relevant))
+            rr_scores.append(_reciprocal_rank(ranked, relevant))
+
+        return {
+            "precision_at_k": float(np.mean(p_scores)),
+            "map": float(np.mean(ap_scores)),
+            "mrr": float(np.mean(rr_scores)),
+        }
 
 
 class RetrievalTask(BaseTask):
