@@ -142,5 +142,35 @@
       "retrieval_map": 0.5088504144021334,
       "retrieval_mrr": 0.9291025641025641
     }
+  },
+  {
+    "date": "2026-04-14",
+    "engine": "ColorHistogram",
+    "modality": "image",
+    "dataset": "stl10",
+    "config": {
+      "vector_size": 96
+    },
+    "metrics": {
+      "sorting_ari": 0.06733959956738009,
+      "retrieval_precision_at_5": 0.264,
+      "retrieval_map": 0.10303469261346272,
+      "retrieval_mrr": 0.44872291106315204
+    }
+  },
+  {
+    "date": "2026-04-14",
+    "engine": "CLIP-ViT-B32",
+    "modality": "image",
+    "dataset": "stl10",
+    "config": {
+      "vector_size": 512
+    },
+    "metrics": {
+      "sorting_ari": 0.8144900552456367,
+      "retrieval_precision_at_5": 0.9840000000000001,
+      "retrieval_map": 0.7743803636915548,
+      "retrieval_mrr": 0.99
+    }
   }
 ]
