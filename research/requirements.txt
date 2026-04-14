@@ -9,4 +9,6 @@ pandas
 seaborn
 sentence-transformers
 torch
+torchvision
+Pillow
 gensim
