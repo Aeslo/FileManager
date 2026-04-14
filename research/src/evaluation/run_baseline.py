@@ -17,6 +17,7 @@ from src.data_utils.loader import load_20newsgroups
 from src.engines.text.tfidf import TfidfEngine
 from src.engines.text.word2vec import Word2VecEngine
 from src.engines.text.fasttext import FastTextEngine
+from src.engines.text.pretrained_gensim import GensimPretrainedEngine
 from src.tasks.sorting import SortingTask
 from src.tasks.retrieval import RetrievalTask
 
@@ -68,9 +69,11 @@ def main():
 
     # Define engines to benchmark
     engines = {
-        "TF-IDF": TfidfEngine(max_features=TFIDF_MAX_FEATURES, min_df=2),
-        "Word2Vec": Word2VecEngine(vector_size=100, window=5, epochs=WV_EPOCHS, min_count=2),
-        "FastText": FastTextEngine(vector_size=100, window=5, epochs=WV_EPOCHS, min_count=2),
+        #"TF-IDF": TfidfEngine(max_features=TFIDF_MAX_FEATURES, min_df=2),
+        #"Word2Vec-Scratch": Word2VecEngine(vector_size=100, window=5, epochs=WV_EPOCHS, min_count=2),
+        #"FastText-Scratch": FastTextEngine(vector_size=100, window=5, epochs=WV_EPOCHS, min_count=2),
+        #"Word2Vec-Pretrained": GensimPretrainedEngine("word2vec-google-news-300"),
+        #"FastText-Pretrained": GensimPretrainedEngine("fasttext-wiki-news-subwords-300"),
     }
 
     for name, engine in engines.items():

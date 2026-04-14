@@ -9,3 +9,4 @@ pandas
 seaborn
 sentence-transformers
 torch
+gensim

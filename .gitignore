@@ -21,7 +21,8 @@ eval-design.html
 .DS_Store
 
 # Hidden files and directories
-.*/
+# .*/
+!.docs/
 
 # .NET
 bin/
