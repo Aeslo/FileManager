@@ -18,6 +18,7 @@ from src.engines.text.tfidf import TfidfEngine
 from src.engines.text.word2vec import Word2VecEngine
 from src.engines.text.fasttext import FastTextEngine
 from src.engines.text.pretrained_gensim import GensimPretrainedEngine
+from src.engines.text.sbert import SBERTEngine
 from src.tasks.sorting import SortingTask
 from src.tasks.retrieval import RetrievalTask
 
@@ -74,6 +75,9 @@ def main():
         #"FastText-Scratch": FastTextEngine(vector_size=100, window=5, epochs=WV_EPOCHS, min_count=2),
         #"Word2Vec-Pretrained": GensimPretrainedEngine("word2vec-google-news-300"),
         #"FastText-Pretrained": GensimPretrainedEngine("fasttext-wiki-news-subwords-300"),
+        "SBERT-Small": SBERTEngine("all-MiniLM-L6-v2"),
+        "SBERT-Large": SBERTEngine("all-mpnet-base-v2"),
+        "SBERT-XLarge": SBERTEngine("all-roberta-large-v1"),
     }
 
     for name, engine in engines.items():

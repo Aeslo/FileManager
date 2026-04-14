@@ -78,5 +78,53 @@
       "retrieval_map": 0.3180890606180649,
       "retrieval_mrr": 0.8318419913419913
     }
+  },
+  {
+    "date": "2026-04-14",
+    "engine": "SBERT-Small",
+    "modality": "text",
+    "dataset": "20newsgroups",
+    "config": {
+      "vector_size": 384,
+      "epochs": null
+    },
+    "metrics": {
+      "sorting_ari": 0.7174503585734947,
+      "retrieval_precision_at_5": 0.882,
+      "retrieval_map": 0.6509889683541417,
+      "retrieval_mrr": 0.9557878787878787
+    }
+  },
+  {
+    "date": "2026-04-14",
+    "engine": "SBERT-Large",
+    "modality": "text",
+    "dataset": "20newsgroups",
+    "config": {
+      "vector_size": 768,
+      "epochs": null
+    },
+    "metrics": {
+      "sorting_ari": 0.7424324122301817,
+      "retrieval_precision_at_5": 0.9020000000000001,
+      "retrieval_map": 0.6859081687786035,
+      "retrieval_mrr": 0.9664771241830065
+    }
+  },
+  {
+    "date": "2026-04-14",
+    "engine": "SBERT-XLarge",
+    "modality": "text",
+    "dataset": "20newsgroups",
+    "config": {
+      "vector_size": 1024,
+      "epochs": null
+    },
+    "metrics": {
+      "sorting_ari": 0.575312356602387,
+      "retrieval_precision_at_5": 0.88,
+      "retrieval_map": 0.6036439288516793,
+      "retrieval_mrr": 0.9506396698267408
+    }
   }
 ]
