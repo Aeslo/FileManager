@@ -8,6 +8,7 @@ matplotlib
 pandas
 seaborn
 sentence-transformers
+transformers
 torch
 torchvision
 Pillow
